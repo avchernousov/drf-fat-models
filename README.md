@@ -1,2 +1,2 @@
 # drf-fat-models
-Put business logic in object-level one place, use automatically from anywhere: API, Django admin and forms.
+Place business logic in one place at the object-level, use automatically from anywhere: API, Django admin and forms.
