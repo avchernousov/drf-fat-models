@@ -1,0 +1,70 @@
+# Пути указываются относительно Repository root
+exclude: |
+    (?x)^(
+          test_project/manage\.py
+        | test_project/.*/migrations/.*
+        | test_project/config/asgi\.py
+        | test_project/config/wsgi\.py
+    )$
+
+repos:
+
+  # форматтеры
+
+  - repo: local
+    hooks:
+      - id: autopep8
+        name: autopep8
+        entry: autopep8
+        language: system
+        types: [python]
+        args: [--aggressive, --experimental, -r, -i, "--global-config=pyproject.toml"]
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black
+        language: system
+        types: [python]
+        args: [--fast, "--config=pyproject.toml"]
+  - repo: local
+    hooks:
+      - id: isort
+        name: isort
+        entry: isort
+        language: system
+        types: [python]
+        args: ["--settings-path=pyproject.toml"]
+  - repo: local
+    hooks:
+      - id: docformatter
+        name: docformatter
+        entry: docformatter
+        language: system
+        types: [python]
+        args: [--in-place, "--wrap-summaries=88", "--wrap-descriptions=88"]
+
+  # линтеры
+
+  - repo: local
+    hooks:
+      - id: flake8
+        name: flake8
+        entry: flake8
+        language: system
+        types: [python]
+        args: ["--config=.flake8"]
+  - repo: local
+    hooks:
+      - id: bandit
+        name: bandit
+        entry: bandit
+        language: system
+        types: [python]
+        args: ['-iii', '-ll']
+
+# раскомментируй строки ниже, чтобы проверить этот файл:
+#  - repo: meta
+#    hooks:
+#      - id: check-hooks-apply
+#      - id: check-useless-excludes
