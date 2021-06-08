@@ -26,6 +26,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
         poetry install
+    - name: Lint with flake8
+      run: |
+        flake8 --statistics
+    - name: Run Bandit
+      run: |
+        bandit -r -iii -ll .
     - name: Run Tests
       run: |
-        pytest
+        pytest -n auto --cov .
