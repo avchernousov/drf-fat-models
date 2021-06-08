@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "drf-fat-models"
 version = "0.1.5"
-description = "Place business logic in one place at the object-level, use automatically from anywhere: API, Django admin and forms."
+description = "Place single-object business logic in one place at the object-level, use automatically from anywhere: API, Django admin and forms."
 license = "MIT"
 authors = ["ZeBrains <a.chernousov@zebrains.team>"]
 maintainers = ["Andrey Chernousov <a.chernousov@zebrains.team>"]
