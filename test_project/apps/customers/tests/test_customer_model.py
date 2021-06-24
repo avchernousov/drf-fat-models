@@ -21,7 +21,7 @@ class TestCustomerModel:
                 phone_suffix="9003322233", email="TestCustomer@example.com"
             )
         assert exc_info.value.args[0] == {
-            "phone_suffix": "User with this phone already exists."
+            "phone_suffix": "User with this phone already exists"
         }
 
     @pytest.mark.usefixtures("create_customers")

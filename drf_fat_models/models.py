@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError as DRFValidationError
 
 
 class FatModel(models.Model):
-    """Provides necessary methods for validation and actions before saving.
+    """Provides methods for validation and actions before saving.
 
     The is_save_from_api instance flag can be used in validate_on_save, actions_on_save
     and prepare_on_save to check if the save is being executed from the DRF API (not
@@ -43,25 +43,32 @@ class FatModel(models.Model):
             raise_exception(e.error_dict)
 
     def validate_on_save(self):
-        """Validate model before save.
+        """Validate model before saving.
 
-        Returns dictionary {field_name: error_str, ...} or error_str. Override this
-        method if need.
+        On error, it must return dictionary {field_name: error_str, ...}
+        or error string, on success - empty dictionary or None.
+
+        Override this method if need.
         """
         return {}
 
     def actions_on_save(self):
-        """Set model fields or update other models before save.
+        """Perform arbitrary actions after validation before saving.
+
+        For example, set model fields or update other models before save.
 
         Override this method if need.
         """
         pass
 
     def prepare_on_save(self):
-        """Validate model and set model fields or update other models before save.
+        """Validate model and perform arbitrary actions before saving.
 
-        Returns dictionary {field_name: error_str, ...} or error_str. Override this
-        method in complex situations, for example if validation need AFTER actions.
+        On error, it must return dictionary {field_name: error_str, ...}
+        or error string, on success - empty dictionary or None.
+
+        Override this method in complex situations, for example if validation need
+        AFTER actions.
         """
         errors = self.validate_on_save()
         if errors:
@@ -72,6 +79,9 @@ class FatModel(models.Model):
 
 class FatModelAtomic(FatModel):
     """Wraps the save into a transaction."""
+
+    class Meta:
+        abstract = True
 
     @transaction.atomic
     def save(self, *args, **kwargs):

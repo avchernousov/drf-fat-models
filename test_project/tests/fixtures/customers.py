@@ -1,6 +1,6 @@
 import pytest
 
-from test_project.apps.customers.models import Customer
+from apps.customers.models import Customer
 
 
 @pytest.fixture

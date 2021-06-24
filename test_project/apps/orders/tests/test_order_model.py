@@ -1,38 +1,36 @@
-# import pytest
-# from rest_framework.exceptions import ValidationError
-#
-# from ..models import CancelWalkReason
-#
-#
-# @pytest.mark.usefixtures("create_cancel_reason")
-# @pytest.mark.django_db
-# class TestCancelWalkReasonModel:
-#     def test_create(self):
-#         CancelWalkReason.objects.create(name="name", code="code")
-#         assert CancelWalkReason.objects.get(code="code").name == "name"
-#
-#     def test_update(self):
-#         cancel_reason = CancelWalkReason.objects.get(code="code1")
-#         cancel_reason.name = "test_name"
-#         cancel_reason.save()
-#         assert CancelWalkReason.objects.get(code="code1").name == "test_name"
-#
-#     def test_unique_name(self):
-#         with pytest.raises(ValidationError):
-#             CancelWalkReason.objects.create(name="name1", code="code")
-#
-#     def test_unique_code(self):
-#         with pytest.raises(ValidationError):
-#             CancelWalkReason.objects.create(name="name", code="code1")
-#
-#     def test_max_length_name(self):
-#         with pytest.raises(ValidationError):
-#             CancelWalkReason.objects.create(name="a" * 201, code="code1")
-#
-#     def test_max_length_code(self):
-#         with pytest.raises(ValidationError):
-#             CancelWalkReason.objects.create(name="name", code="a" * 51)
-#
-#     def test_delete(self):
-#         row_num, _ = self.cancel_reason1.delete()
-#         assert row_num == 1
+import pytest
+from rest_framework.exceptions import ValidationError
+
+from apps.orders.models import Order
+
+
+@pytest.mark.django_db
+class TestOrderModel:
+    @pytest.mark.usefixtures("create_customers")
+    def test_create_not_verified_ok(self):
+        order = Order.objects.create(
+            description="Description", customer=self.customer1
+        )
+        assert order.status == Order.DRAFT
+
+    @pytest.mark.usefixtures("create_customers")
+    def test_create_verified_ok(self):
+        order = Order.objects.create(
+            description="Description", customer=self.customer2
+        )
+        assert order.status == Order.OPENED
+
+    @pytest.mark.usefixtures("create_orders")
+    def test_update_status_opened_ok(self):
+        order = self.order1
+        order.status = Order.OPENED
+        order.save()
+        assert order.status == Order.OPENED
+
+    @pytest.mark.usefixtures("create_orders")
+    def test_update_status_opened_bad(self):
+        order = self.order2
+        order.status = Order.OPENED
+        with pytest.raises(ValidationError) as exc_info:
+            order.save()
+        assert exc_info.value.args[0] == "This status cannot be set"
